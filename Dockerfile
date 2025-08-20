@@ -1,13 +1,15 @@
-FROM python:3.9
+FROM python:3.9-alpine
 
 WORKDIR /app/backend
 
 COPY requirements.txt /app/backend
-RUN apt-get update \
-    && apt-get upgrade -y \
-    && apt-get install -y gcc default-libmysqlclient-dev pkg-config \
-    && rm -rf /var/lib/apt/lists/*
 
+# Use apk instead of apt-get for Alpine
+RUN apk update && apk add --no-cache \
+    gcc \
+    musl-dev \
+    mariadb-connector-c-dev \
+    pkgconfig
 
 # Install app dependencies
 RUN pip install mysqlclient
